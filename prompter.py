@@ -15,26 +15,30 @@ def generate_initial_prompt():
         "Format your response **in JSON** with the following keys:\n"
         "```\n"
         "{\n"
-        '  "reasoning": "<문제 풀이 과정>",\n'
-        '  "answer": "<최종 정답 번호만 기재>"\n'
+        '  "reasoning": "<Provide a summarized mathematical reasoning process>",\n'
+        '  "answer": "<Only include the final answer number>"\n'
         "}\n"
         "```\n"
         "Where:\n"
-        "- reasoning: 수학적 사고 과정을 요약하여 적어주세요\n"
-        "- answer: 최종 객관식 정답 번호만 기재해주세요.\n\n"
+        "- reasoning: Summarize the mathematical reasoning process.\n"
+        "- answer: Only include the final multiple-choice answer number.\n\n"
         "IMPORTANT: Output **only** valid JSON, without additional explanation or formatting.\n"
     )
 
     return system_content
-
 def refine_prompt_with_solution(previous_prompt, solutions):
     user_content = (
         "Below is the previous prompt used for solving math problems:\n"
         f"{previous_prompt}\n\n"
         "And here are the solver's solutions and explanations:\n"
         f"{json.dumps(solutions, indent=2, ensure_ascii=False)}\n\n"
-        "Please suggest how we can refine or improve the prompt to get better or more accurate explanations.\n\n"
-        "Remember to preserve the JSON format instruction (problem/reasoning/answer).\n"
+        "Please analyze the solutions and identify any mistakes, inaccuracies, or unclear reasoning in the calculations.\n\n"
+        "Refine the prompt to explicitly require:\n"
+        "- A more detailed breakdown of each mathematical operation to minimize calculation errors.\n"
+        "- Additional verification steps to check intermediate results and prevent mistakes.\n"
+        "- A step-by-step explanation that clearly justifies each decision in the reasoning process.\n"
+        "- Ensuring that the final output adheres strictly to the JSON format (reasoning/answer).\n\n"
+        "Provide only the refined prompt."
     )
 
     response = client.chat.completions.create(
