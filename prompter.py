@@ -5,7 +5,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-APIKEY = os.getenv("OPENAI_KEY")
 client = OpenAI(api_key=os.getenv("OPENAI_KEY"))
 
 def generate_initial_prompt():
@@ -26,6 +25,7 @@ def generate_initial_prompt():
     )
 
     return system_content
+
 def refine_prompt_with_solution(previous_prompt, solutions):
     user_content = (
         "Below is the previous prompt used for solving math problems:\n"
