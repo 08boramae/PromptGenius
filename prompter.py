@@ -32,9 +32,9 @@ def refine_prompt_with_solution(previous_prompt, solutions):
         "Below is the previous prompt used for solving math problems:\n"
         f"{previous_prompt}\n\n"
         "And here are the solver's solutions and explanations:\n"
-        f"{json.dumps(solutions, indent=2)}\n\n"
+        f"{json.dumps(solutions, indent=2, ensure_ascii=False)}\n\n"
         "Please suggest how we can refine or improve the prompt to get better or more accurate explanations.\n\n"
-        "Remember to preserve the JSON format instruction (problem/reasoning/answer)."
+        "Remember to preserve the JSON format instruction (problem/reasoning/answer).\n"
     )
 
     response = client.chat.completions.create(
