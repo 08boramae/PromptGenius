@@ -52,7 +52,8 @@ def solve_math_problems(prompt, problems_json_path="math_problems.json"):
             "gpt_answer_raw": gpt_answer_raw,
             "parsed_answer": parsed_answer,
             "correct_answer": correct_answer,
-            "is_correct": is_correct
+            "is_correct": is_correct,
+            "commentary": problem["commentary"]
         })
 
     return solutions
