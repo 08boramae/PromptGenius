@@ -62,9 +62,8 @@ def refine_prompt_with_solution(previous_prompt, solutions):
             f"  - Your answer: {m['model_answer']}\n"
             f"  - Correct answer: {m['correct_answer']}\n"
             f"  - Correct commentary: {m['commentary']}\n"
-            f"  Please identify exactly which part of the solution logic should be revised. \n\n"
         )
-    print(mistakes_str)
+    mistakes_str += f"  Please identify exactly which part of the solution logic should be revised. \n\n"
 
     user_content = (
         "Below is the previous prompt:\n"
