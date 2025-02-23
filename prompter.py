@@ -29,7 +29,7 @@ def generate_initial_prompt():
         "5. **Strict JSON Format**:\n"
         "- Output **only** valid JSON with:\n"
         "  - `reasoning`: Concise but complete mathematical logic, including all critical steps.\n"
-        "  - `answer`: Exact multiple-choice number (1-5).\n"
+        "  - `answer`: Exact multiple-choice number (1-5). if you cannot determine the answer, provide an 0.\n\n"
         "- Example:\n"
         "  ```json\n"
         "  {\n"
