@@ -1,3 +1,5 @@
+import os
+import json
 from prompter import generate_initial_prompt, refine_prompt_with_solution
 from math_solver import solve_math_problems
 
@@ -13,42 +15,37 @@ class bcolors:
     UNDERLINE = '\033[4m'
 
 def main():
-    # 1) Generate initial prompt
-    initial_prompt = generate_initial_prompt()
+    # 1. 초기 Prompt 생성
+    prompt = generate_initial_prompt()
     print(f"{bcolors.OKCYAN}=== [1] Initial Prompt ==={bcolors.ENDC}")
-    print(initial_prompt)
+    print(prompt)
     print()
 
-    # 2) Solve math problems with the initial prompt
-    solutions = solve_math_problems(prompt=initial_prompt, problems_json_path="math_problems.json")
-    print(f"{bcolors.OKCYAN}=== [2] Math Problem Solutions ==={bcolors.ENDC}")
-    for sol in solutions:
-        print(f"{bcolors.WARNING}Question: {sol['question']}{bcolors.ENDC}")
-        print(f"GPT Answer (Raw): {sol['gpt_answer_raw']}")
-        print(f"Parsed Answer: {sol['parsed_answer']} | Correct Answer: {sol['correct_answer']} | Correct: {sol['is_correct']}")
-        print(f"{bcolors.OKGREEN}---------------------------------------------------------{bcolors.ENDC}")
-
-    # 3) Refine the prompt based on the solutions
-    refined_prompt = refine_prompt_with_solution(initial_prompt, solutions)
-    print(f"{bcolors.OKCYAN}\n=== [3] Refined Prompt ==={bcolors.ENDC}")
-    print(refined_prompt)
-    print()
-
-    # 4) Repeat 10 times: solve problems with the refined prompt and refine the prompt again
+    # 2. 10번 반복: 문제 풀이 -> refine
     for i in range(1, 11):
         print(f"{bcolors.OKCYAN}=== Iteration {i} ==={bcolors.ENDC}")
-        solutions_iter = solve_math_problems(prompt=refined_prompt, problems_json_path="math_problems.json")
 
+        # (a) 문제 풀기 (이때 'prompt'만 사용; 이전 대화 없음)
+        solutions = solve_math_problems(
+            prompt=prompt,  # <-- 이전 맥락 없이, prompt만 넘김
+            problems_json_path="math_problems.json"
+        )
+
+        # 결과 출력
         print(f"{bcolors.OKCYAN}=== [Iteration {i} Solutions] ==={bcolors.ENDC}")
-        for sol in solutions_iter:
+        for sol in solutions:
             print(f"{bcolors.WARNING}Question: {sol['question']}{bcolors.ENDC}")
             print(f"GPT Answer (Raw): {sol['gpt_answer_raw']}")
             print(f"Parsed Answer: {sol['parsed_answer']} | Correct Answer: {sol['correct_answer']} | Correct: {sol['is_correct']}")
             print(f"{bcolors.OKGREEN}---------------------------------------------------------{bcolors.ENDC}")
 
-        refined_prompt = refine_prompt_with_solution(refined_prompt, solutions_iter)
-        print(f"{bcolors.OKCYAN}\n=== [Iteration {i} Refined Prompt] ==={bcolors.ENDC}")
-        print(refined_prompt)
+        # (b) prompt refine
+        prompt = refine_prompt_with_solution(
+            previous_prompt=prompt,
+            solutions=solutions
+        )
+        print(f"{bcolors.OKCYAN}=== [Iteration {i} Refined Prompt] ==={bcolors.ENDC}")
+        print(prompt)
         print()
 
 if __name__ == "__main__":

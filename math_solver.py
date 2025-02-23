@@ -29,6 +29,7 @@ def solve_math_problems(prompt, problems_json_path="math_problems.json"):
         question = problem["question"]
         correct_answer = problem["answer"]
 
+        # 매번 독립된 ChatCompletion
         response = client.chat.completions.create(
             model="gpt-4o",
             messages=[
@@ -36,10 +37,11 @@ def solve_math_problems(prompt, problems_json_path="math_problems.json"):
                 {"role": "user", "content": f"Problem {idx}: {question}"}
             ]
         )
+
         gpt_answer_raw = response.choices[0].message.content.strip()
         parsed_answer = parse_answer(gpt_answer_raw)
-        is_correct = (int(parsed_answer) == int(correct_answer))
-        
+        is_correct = (str(parsed_answer) == str(correct_answer))
+
         print(f"{bcolors.WARNING}Question: {question}{bcolors.ENDC}")
         print(f"GPT Answer (Raw): {gpt_answer_raw}")
         print(f"Parsed Answer: {parsed_answer} | Correct Answer: {correct_answer} | Correct: {is_correct}")
@@ -52,6 +54,7 @@ def solve_math_problems(prompt, problems_json_path="math_problems.json"):
             "correct_answer": correct_answer,
             "is_correct": is_correct
         })
+
     return solutions
 
 def parse_answer(answer_text):

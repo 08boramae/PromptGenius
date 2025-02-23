@@ -43,18 +43,38 @@ def generate_initial_prompt():
     return system_content
 
 def refine_prompt_with_solution(previous_prompt, solutions):
+    # 틀린 문제만 골라내기
+    mistakes = []
+    for s in solutions:
+        if not s["is_correct"]:
+            mistakes.append({
+                "question": s["question"],
+                "model_answer": s["parsed_answer"],
+                "correct_answer": s["correct_answer"]
+            })
+
+    # mistakes를 바탕으로, 다음과 같이 구체적으로 지시
+    mistakes_str = ""
+    for m in mistakes:
+        mistakes_str += (
+            f"- The question: \"{m['question']}\"\n"
+            f"  - Your answer: {m['model_answer']}\n"
+            f"  - Correct answer: {m['correct_answer']}\n"
+            f"  - Correct commentary: {m['commentary']}\n"
+            f"  Please identify exactly which part of the solution logic should be revised. \n\n"
+        )
+    print(mistakes_str)
+
     user_content = (
-        "Below is the previous prompt used for solving math problems:\n"
-        f"{previous_prompt}\n\n"
-        "And here are the solver's solutions and explanations:\n"
+        "Below is the previous prompt:\n"
+        f"------------------\n{previous_prompt}\n------------------\n\n"
+        "Here are the solutions from your last attempt:\n"
         f"{json.dumps(solutions, indent=2, ensure_ascii=False)}\n\n"
-        "Please analyze the solutions and identify any mistakes, inaccuracies, or unclear reasoning in the calculations.\n\n"
-        "Refine the prompt to explicitly require:\n"
-        "- A more detailed breakdown of each mathematical operation to minimize calculation errors.\n"
-        "- Additional verification steps to check intermediate results and prevent mistakes.\n"
-        "- A step-by-step explanation that clearly justifies each decision in the reasoning process.\n"
-        "- Ensuring that the final output adheres strictly to the JSON format (reasoning/answer).\n\n"
-        "Provide only the refined prompt."
+        "We found these mistakes:\n"
+        f"{mistakes_str}\n"
+        "Please refine the prompt so that these errors are explicitly addressed.\n"
+        "Be sure to incorporate detailed instructions preventing the same mistakes.\n"
+        "Output ONLY the refined prompt as text."
     )
 
     response = client.chat.completions.create(
@@ -65,5 +85,5 @@ def refine_prompt_with_solution(previous_prompt, solutions):
         ]
     )
 
-    improved_prompt = response.choices[0].message.content
+    improved_prompt = response.choices[0].message.content.strip()
     return improved_prompt
