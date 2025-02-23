@@ -50,7 +50,8 @@ def refine_prompt_with_solution(previous_prompt, solutions):
             mistakes.append({
                 "question": s["question"],
                 "model_answer": s["parsed_answer"],
-                "correct_answer": s["correct_answer"]
+                "correct_answer": s["correct_answer"],
+                "commentary": s["commentary"]
             })
 
     # mistakes를 바탕으로, 다음과 같이 구체적으로 지시
