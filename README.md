@@ -5,7 +5,6 @@ PromptGenius는 자동 프롬프트 엔지니어링 도구입니다.<br>
 
 ## 사용 방법
 
-
 ```bash
 python3 main.py
 ```
