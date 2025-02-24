@@ -21,8 +21,8 @@ def main():
     print(prompt)
     print()
 
-    # 2. 10번 반복: 문제 풀이 -> refine
-    for i in range(1, 11):
+    # 2. 15 반복: 문제 풀이 -> refine
+    for i in range(1, 15):
         print(f"{bcolors.OKCYAN}=== Iteration {i} ==={bcolors.ENDC}")
 
         # (a) 문제 풀기 (이때 'prompt'만 사용; 이전 대화 없음)
