@@ -51,7 +51,8 @@ def refine_prompt_with_solution(previous_prompt, solutions):
                 "question": s["question"],
                 "model_answer": s["parsed_answer"],
                 "correct_answer": s["correct_answer"],
-                "commentary": s["commentary"]
+                "commentary": s["commentary"],
+                "model_commentary": s["model_commentary"]
             })
 
     # mistakes를 바탕으로, 다음과 같이 구체적으로 지시
@@ -61,6 +62,7 @@ def refine_prompt_with_solution(previous_prompt, solutions):
             f"- The question: \"{m['question']}\"\n"
             f"  - Your answer: {m['model_answer']}\n"
             f"  - Correct answer: {m['correct_answer']}\n"
+            f"  - Your commentary: \"{m['model_commentary']}\"\n"
             f"  - Correct commentary: {m['commentary']}\n"
         )
     mistakes_str += f"  Please identify exactly which part of the solution logic should be revised. \n\n"

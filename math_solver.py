@@ -53,9 +53,9 @@ def solve_math_problems(prompt, problems_json_path="math_problems.json"):
             "parsed_answer": parsed_answer,
             "correct_answer": correct_answer,
             "is_correct": is_correct,
-            "commentary": problem["commentary"]
+            "commentary": problem["commentary"],
+            "model_commentary": response.choices[0].message.content.strip()  # Add this line
         })
-
     return solutions
 
 def parse_answer(answer_text):
